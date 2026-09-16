@@ -43,14 +43,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             raysColor="#5dfeca"
             raysSpeed={0.5}
             lightSpread={0.9}
-            rayLength={1.5}
+            rayLength={1.4}
             followMouse={true}
             mouseInfluence={0.02}
-            noiseAmount={0}
+            noiseAmount={0.0}
             distortion={0.01}
-            pulsating={false}
-            fadeDistance={1}
-            saturation={1}
           />
         </div>
         <main>{children}</main>
