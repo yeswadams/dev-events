@@ -133,7 +133,11 @@ EventSchema.pre("save", async function () {
   // If an error is thrown inside normalizeDate/Time, Mongoose catches it automatically!
 });
 
-// Helper function to generate URL-friendly slug
+/**
+ * Converts an event title to a lowercase, hyphen-delimited URL slug.
+ *
+ * Characters other than ASCII letters, digits, whitespace, and hyphens are removed.
+ */
 function generateSlug(title: string): string {
   return title
     .toLowerCase()
@@ -144,7 +148,11 @@ function generateSlug(title: string): string {
     .replace(/^-|-$/g, ""); // Remove leading/trailing hyphens
 }
 
-// Helper function to normalize date to ISO format
+/**
+ * Parses a date string and returns its UTC calendar date in YYYY-MM-DD format.
+ *
+ * @throws {Error} If the value cannot be parsed as a date.
+ */
 function normalizeDate(dateString: string): string {
   // Require strict YYYY-MM-DD input — reject anything else upfront
   const strictRegex = /^(\d{4})-(\d{2})-(\d{2})$/;
@@ -185,7 +193,11 @@ function normalizeDate(dateString: string): string {
   return date.toISOString().split("T")[0]; // YYYY-MM-DD
 }
 
-// Helper function to normalize time format
+/**
+ * Normalizes a colon-delimited time string with an optional AM/PM suffix to 24-hour HH:MM.
+ *
+ * @throws {Error} If the syntax is unsupported or the resulting time is out of range.
+ */
 function normalizeTime(timeString: string): string {
   // Handle various time formats and convert to HH:MM (24-hour format)
   const timeRegex = /^(\d{1,2}):(\d{2})(\s*(AM|PM))?$/i;
