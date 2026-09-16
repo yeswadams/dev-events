@@ -22,8 +22,10 @@ const BookingSchema = new Schema<IBooking>(
       trim: true,
       lowercase: true,
       validate: {
+        /**
+         * Checks whether an address matches the booking schema's accepted email syntax.
+         */
         validator: function (email: string) {
-          // RFC 5322 compliant email validation regex
           const emailRegex =
             /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
           return emailRegex.test(email);
@@ -37,7 +39,10 @@ const BookingSchema = new Schema<IBooking>(
   },
 );
 
-// Pre-save hook to validate events exists before creating booking
+/**
+ * Rejects new or event-reassigned bookings when the referenced event cannot be found.
+ * Invalid event IDs and database lookup failures are surfaced as validation errors.
+ */
 BookingSchema.pre("save", async function (next) {
   const booking = this as IBooking;
 

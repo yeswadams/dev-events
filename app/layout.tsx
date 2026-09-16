@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   description: "The Hub for Every Dev Event You Mustn't Miss",
 };
 
+/**
+ * Renders the root HTML shell with global navigation and the decorative background.
+ */
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html

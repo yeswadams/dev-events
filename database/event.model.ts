@@ -109,8 +109,11 @@ const EventSchema = new Schema<IEvent>(
   },
 );
 
-// Pre-save hook for slug generation and data normalization
-// Marked as "async" with NO "next" parameter
+/**
+ * Generates a slug for new or retitled events and normalizes modified date and time values.
+ *
+ * @throws {Error} When a modified date or time cannot be normalized.
+ */
 EventSchema.pre("save", async function () {
   const event = this as IEvent;
 
@@ -133,7 +136,9 @@ EventSchema.pre("save", async function () {
   // If an error is thrown inside normalizeDate/Time, Mongoose catches it automatically!
 });
 
-// Helper function to generate URL-friendly slug
+/**
+ * Converts a title to a lowercase, hyphen-delimited URL segment.
+ */
 function generateSlug(title: string): string {
   return title
     .toLowerCase()
@@ -144,7 +149,11 @@ function generateSlug(title: string): string {
     .replace(/^-|-$/g, ""); // Remove leading/trailing hyphens
 }
 
-// Helper function to normalize date to ISO format
+/**
+ * Parses a date string and returns its UTC date in YYYY-MM-DD format.
+ *
+ * @throws {Error} When the built-in date parser cannot parse the value.
+ */
 function normalizeDate(dateString: string): string {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) {
@@ -153,7 +162,11 @@ function normalizeDate(dateString: string): string {
   return date.toISOString().split("T")[0]; // Return YYYY-MM-DD format
 }
 
-// Helper function to normalize time format
+/**
+ * Converts a colon-separated time with an optional AM/PM suffix to zero-padded HH:MM.
+ *
+ * @throws {Error} When the syntax is unsupported or the converted time is out of range.
+ */
 function normalizeTime(timeString: string): string {
   // Handle various time formats and convert to HH:MM (24-hour format)
   const timeRegex = /^(\d{1,2}):(\d{2})(\s*(AM|PM))?$/i;
