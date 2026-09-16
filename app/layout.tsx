@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   description: "The Hub for Every Dev Event You Mustn't Miss",
 };
 
+/** Renders route content within the site-wide document shell and shared UI. */
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
