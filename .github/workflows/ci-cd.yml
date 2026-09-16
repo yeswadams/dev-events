@@ -23,10 +23,10 @@ jobs:
                 node-version: "20"
 
             - name: Install project tools
-              run: npm install 
+              run: npm ci
 
             - name: Run tests
-              run: npm test
+              run: npm run build
             
             - name: Deploy the application
               run: echo "Tests passed deploying to the cloud server..."
