@@ -1,0 +1,32 @@
+name: First ci-cd pipeline
+
+# Trigger:
+on:
+    push:
+        branches: [ master ]
+    pull_request: 
+        branches: [ master ]
+
+# Jobs
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest # virtual cloud computer to use
+
+        steps:
+            # download the repos code
+            - name: Check out repository code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with: 
+                node-version: "20"
+
+            - name: Install project tools
+              run: npm install 
+
+            - name: Run tests
+              run: npm test
+            
+            - name: Deploy the application
+              run: echo "Tests passed deploying to the cloud server..."
