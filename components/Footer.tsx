@@ -126,9 +126,10 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-light-200/60 font-light">
-          <p>
+          {/* <p>
             © {new Date().getFullYear()} Skipmatrix Inc. All rights reserved.
-          </p>
+          </p> */}
+          <p>© 2026 Skipmatrix Inc. All rights reserved.</p>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
             <span>Systems Normal</span>
