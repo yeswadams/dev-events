@@ -133,7 +133,11 @@ EventSchema.pre("save", async function () {
   // If an error is thrown inside normalizeDate/Time, Mongoose catches it automatically!
 });
 
-// Helper function to generate URL-friendly slug
+/**
+ * Converts an event title to a lowercase, hyphen-delimited URL slug.
+ *
+ * Characters other than ASCII letters, digits, whitespace, and hyphens are removed.
+ */
 function generateSlug(title: string): string {
   return title
     .toLowerCase()
@@ -144,16 +148,56 @@ function generateSlug(title: string): string {
     .replace(/^-|-$/g, ""); // Remove leading/trailing hyphens
 }
 
-// Helper function to normalize date to ISO format
+/**
+ * Parses a date string and returns its UTC calendar date in YYYY-MM-DD format.
+ *
+ * @throws {Error} If the value cannot be parsed as a date.
+ */
 function normalizeDate(dateString: string): string {
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) {
-    throw new Error("Invalid date format");
+  // Require strict YYYY-MM-DD input — reject anything else upfront
+  const strictRegex = /^(\d{4})-(\d{2})-(\d{2})$/;
+  const match = dateString.trim().match(strictRegex);
+
+  if (!match) {
+    throw new Error(
+      "Invalid date format. Use YYYY-MM-DD (e.g. 2024-06-15)",
+    );
   }
-  return date.toISOString().split("T")[0]; // Return YYYY-MM-DD format
+
+  const year = parseInt(match[1], 10);
+  const month = parseInt(match[2], 10);  // 1-based
+  const day = parseInt(match[3], 10);
+
+  // Reject out-of-range month/day before touching Date
+  if (month < 1 || month > 12 || day < 1 || day > 31) {
+    throw new Error(
+      `Invalid date: ${dateString} — month or day out of range`,
+    );
+  }
+
+  // Parse as UTC explicitly to avoid timezone shifts
+  const date = new Date(Date.UTC(year, month - 1, day));
+
+  // Round-trip check: if Date rolled over (e.g. Feb 30 → Mar 1),
+  // the UTC components won't match what we put in — reject it
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() + 1 !== month ||
+    date.getUTCDate() !== day
+  ) {
+    throw new Error(
+      `Calendar-invalid date: ${dateString} (e.g. Feb 30 does not exist)`,
+    );
+  }
+
+  return date.toISOString().split("T")[0]; // YYYY-MM-DD
 }
 
-// Helper function to normalize time format
+/**
+ * Normalizes a colon-delimited time string with an optional AM/PM suffix to 24-hour HH:MM.
+ *
+ * @throws {Error} If the syntax is unsupported or the resulting time is out of range.
+ */
 function normalizeTime(timeString: string): string {
   // Handle various time formats and convert to HH:MM (24-hour format)
   const timeRegex = /^(\d{1,2}):(\d{2})(\s*(AM|PM))?$/i;

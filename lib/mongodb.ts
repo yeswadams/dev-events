@@ -1,4 +1,7 @@
+import dns from 'node:dns'
 import mongoose from "mongoose";
+
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 // Define the connection cache type
 type MongooseCache = {
@@ -8,7 +11,6 @@ type MongooseCache = {
 
 // Extend the global object to include our mongoose cache
 declare global {
-   // eslint-disable-next-line no-var
   var mongoose: MongooseCache | undefined;
 }
 
@@ -22,9 +24,10 @@ if (!global.mongoose) {
 }
 
 /**
- * Establishes a connection to MongoDB using Mongoose.
- * Caches the connection to prevent multiple connections during development hot reloads.
- * @returns Promise resolving to the Mongoose instance
+ * Establishes or reuses a cached MongoDB connection and returns the Mongoose instance.
+ * Concurrent callers share an in-progress connection attempt.
+ *
+ * @throws {Error} If `MONGODB_URI` is unset or Mongoose cannot establish the connection.
  */
 async function connectDB(): Promise<typeof mongoose> {
   // Return existing connection if available
