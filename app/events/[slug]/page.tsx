@@ -1,10 +1,10 @@
-import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { getEventBySlug } from "@/lib/fetches/events";
 import Image from "next/image";
 import BookEvent from "@/components/BookEvent";
 import { getSimilarEventsBySlug } from "@/lib/actions/event.actions";
 import EventCard from "@/components/ui/EventCard";
+import { cacheLife } from "next/cache";
 
 type PropsType = {
   icon: string;
@@ -17,7 +17,8 @@ const EventDetailsPage = async ({
 }: {
   params: Promise<{ slug: string }>;
 }) => {
-  await connection();
+    'use cache'
+    cacheLife('hours');
 
   const { slug } = await params;
 
