@@ -23,6 +23,7 @@ export async function getEventBySlug(slug: string) {
     return null;
   }
 
+
   return {
     ...event,
     _id: event._id.toString(),

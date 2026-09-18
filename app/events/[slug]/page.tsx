@@ -3,6 +3,8 @@ import { getEventBySlug } from "@/lib/fetches/events";
 import Image from "next/image";
 import { IEvent } from "@/database";
 import BookEvent from "@/components/BookEvent";
+import { getSimilarEventsBySlug } from "@/lib/actions/event.actions";
+import EventCard from "@/components/ui/EventCard";
 
 type PropsType = {
   icon: string;
@@ -10,7 +12,8 @@ type PropsType = {
   label: string;
 };
 
-const bookings = 10
+
+
 const EventDetailsPage = async ({
   params,
 }: {
@@ -18,6 +21,10 @@ const EventDetailsPage = async ({
 }) => {
   const { slug } = await params;
   const event = await getEventBySlug(slug);
+
+  const bookings = 10;
+
+  const similarEvents: IEvent[] = await getSimilarEventsBySlug(slug);
 
   const {
     title,
@@ -116,6 +123,15 @@ const EventDetailsPage = async ({
                 <BookEvent />
             </div>
         </aside>
+      </div>
+
+      <div className="flex w-full flex-col gap-4 pt-20">
+        <h2>Similar Events</h2>
+        <div className='events'>
+            {similarEvents.length > 0 && similarEvents.map((similarEvent: IEvent) => (
+                <EventCard key={similarEvent.id} {...similarEvent} />
+            ))}
+        </div>
       </div>
     </section>
   );
