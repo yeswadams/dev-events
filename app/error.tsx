@@ -19,7 +19,7 @@ export default function ErrorPage({
   }, [error]);
 
   return (
-    <div>
+    <div className='min-h-screen'>
       <h2>Something went wrong!</h2>
       <button
         onClick={

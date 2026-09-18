@@ -1,13 +1,17 @@
-import { connection } from "next/server";
+// import { connection } from "next/server";
 import ExploreBtn from "@/components/button";
 import EventCard from "@/components/ui/EventCard";
 import { getEvents } from "@/lib/fetches/events";
+import { cacheLife } from "next/cache";
 
 // const BASE_URL = process.env.NEXT_BASE_URL;
- // export const dynamic = "force-dynamic"; // prevents prerendering of this page at build time, gets rendered when the request arrives.
+// export const dynamic = "force-dynamic"; // prevents prerendering of this page at build time, gets rendered when the request arrives.
 
 const HomePage = async () => {
-  await connection();
+  
+  "use cache";
+  cacheLife("hours");
+  // await connection();
 
   const events = await getEvents();
   // const res = await fetch(`${BASE_URL}/api/events`);
