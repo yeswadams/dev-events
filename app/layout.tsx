@@ -4,6 +4,7 @@ import "./globals.css";
 import LightRays from "@/components/ui/LightRays";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           />
         </div>
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
